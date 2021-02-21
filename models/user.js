@@ -17,7 +17,7 @@ class User {
     }
 
     addToCart(product) {
-        const cartProductIndex = this.cart.items.findIndex(cp => {
+        const cartProductIndex = this.cart.items.indexOf(cp => {
             return cp.productId.toString() === product._id.toString();
           });
           let newQuantity = 1;
@@ -59,6 +59,19 @@ class User {
             };
             });
         });
+    }
+
+    deleteItemFromCart(productId) {
+        const updatedCartItems = this.cart.items.filter(item => {
+            return item.productId.toString() !== productId.toString();
+        });
+        const db = getDb();
+        return db
+        .collection('users')
+        .updateOne(
+            {_id: new ObjectId(this._id)}, 
+            {$set: {cart:{items: updatedCartItems}}}
+        );
     }
 
     static findById(userId) {
