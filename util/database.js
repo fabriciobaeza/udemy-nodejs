@@ -4,24 +4,25 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 const mongoConnect = callback => {
-    MongoClient
-    .connect('mongodb+srv://fabriciobaeza:projectmayhem75@cluster0.n4hv1.mongodb.net/shop?retryWrites=true&w=majority')
+  MongoClient.connect(
+    'mongodb+srv://fabriciobaeza:projectmayhem75@cluster0.n4hv1.mongodb.net/shop?retryWrites=true&w=majority'
+  )
     .then(client => {
-        console.log('Connected!');
-        _db = client.db();
-        callback();
+      console.log('Connected!');
+      _db = client.db();
+      callback();
     })
     .catch(err => {
-        console.log(err);
-        throw err;
+      console.log(err);
+      throw err;
     });
 };
 
 const getDb = () => {
-    if(_db) {
-        return _db;
-    }
-    throw 'No databases found!'
+  if (_db) {
+    return _db;
+  }
+  throw 'No database found!';
 };
 
 exports.mongoConnect = mongoConnect;
