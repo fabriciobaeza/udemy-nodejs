@@ -99,6 +99,7 @@ exports.postSignup = (req, res, next) => {
         })
         .then((result) => {
           res.redirect("/login");
+          console.log("signed up!");
           return transporter.sendMail({
             to: email,
             from: "fabriciobaeza@gmail.com",
@@ -158,7 +159,7 @@ exports.postReset = (req, res, next) => {
         transporter.sendMail({
           to: req.body.email,
           from: "fabriciobaeza@gmail.com",
-          subject: "Password rest",
+          subject: "Password reset",
           html: `
           <p> You requested a password reset </p>
           <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password. </p>
@@ -190,8 +191,38 @@ exports.getNewPassword = (req, res, next) => {
         pageTitle: "New Password",
         errorMessage: message,
         userId: user._id.toString(),
+        passwordToken: token,
       });
       console.log(user);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.postNewPassword = (req, res, next) => {
+  const newPassword = req.body.password;
+  const userId = req.body.userId;
+  const passwordToken = req.body.passwordToken;
+  let resetUser;
+
+  User.findOne({
+    resetToken: passwordToken,
+    resetTokenExpiration: { $gt: Date.now() },
+    _id: userId,
+  })
+    .then((user) => {
+      resetUser = user;
+      return bcrypt.hash(newPassword, 12);
+    })
+    .then((hashedPassword) => {
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = null;
+      resetUser.resetTokenExpiration = undefined;
+      return resetUser.save();
+    })
+    .then(result => {
+      res.redirect('/login');
     })
     .catch((err) => {
       console.log(err);
