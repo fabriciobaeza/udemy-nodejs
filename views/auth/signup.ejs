@@ -9,7 +9,7 @@
     <main>
         <% if (errorMessage) { %>
             <div class="user-message user-message--error"><%= errorMessage %></div>
-            <% } %>
+        <% } %>
         <form class="login-form" action="/signup" method="POST" novalidate>
             <div class="form-control">
                 <label for="email">E-Mail</label>
@@ -18,8 +18,7 @@
                     type="email" 
                     name="email" 
                     id="email" 
-                    value="<%= oldInput.email%>"
-                >
+                    value="<%= oldInput.email %>">
             </div>
             <div class="form-control">
                 <label for="password">Password</label>
@@ -28,8 +27,7 @@
                     type="password" 
                     name="password" 
                     id="password" 
-                    value="<%= oldInput.password%>" 
-                >
+                    value="<%= oldInput.password %>">
             </div>
             <div class="form-control">
                 <label for="confirmPassword">Confirm Password</label>
@@ -38,8 +36,7 @@
                     type="password" 
                     name="confirmPassword" 
                     id="confirmPassword" 
-                    value="<%= oldInput.confirmPassword %>"
-                >
+                    value="<%= oldInput.confirmPassword %>">
             </div>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn" type="submit">Signup</button>
